@@ -7,8 +7,9 @@ module.exports = {
   networks: {
     development: {
       host: "127.0.0.1",
+      port: 7545,
       // port: 8545,     // ganache-cli
-      port: 9545,        // truffle develop
+      // port: 9545,        // truffle develop
       network_id: "*" // Match any network id
     }
   }

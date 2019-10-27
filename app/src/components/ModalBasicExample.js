@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import {
-  Button,
   Header,
   Segment,
   TransitionablePortal,
@@ -8,12 +7,21 @@ import {
 import '../css/ModalBasicExample.css'
 
 export default class TransitionablePortalExamplePortal extends Component {
-  state = { open: false }
+  state = { open: false, value: 0 }
   handleOpen = () => this.setState({ open: true })
   handleClose = () => this.setState({ open: false })
 
   componentDidMount() {
     this.subscribe_to_events()
+    this.setState({
+      value: this.props.value
+    })
+  }
+
+  componentWillReceiveProps() {
+    this.setState({
+      value: this.props.value
+    })
   }
 
   subscribe_to_events = async () => {
@@ -21,8 +29,9 @@ export default class TransitionablePortalExamplePortal extends Component {
 
     this.unsubscribe = contract.events.LotteryWon(() => {
       console.log('Someone Won the Lottery!!!')
-      this.setState({ popup_is_open: true })
+      console.log('Is this a value? ', this.state.value)
 
+      this.setState({ popup_is_open: true })
       setTimeout(() => {
         this.setState({ popup_is_open: false })
       }, 3000)
@@ -63,7 +72,7 @@ export default class TransitionablePortalExamplePortal extends Component {
               <i className="ethereum icon" id="ethereum" />
               <h4>You have guessed the Magic Number!</h4>
               <h4>You will now receive the entire balance:</h4>
-              <h2>{this.props.value} ETH</h2>
+              <h2>{this.state.value/1000000000000000000} ETH</h2>
             </div>
           </Segment>
         </TransitionablePortal>

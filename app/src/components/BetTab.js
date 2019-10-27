@@ -48,6 +48,7 @@ class BetTab extends React.Component {
     }
     get_dropdown_accounts = () => {
         var dropdown_selection = [];
+    
         const accounts = Object.values(this.props.drizzleState.accounts)
 
         if (accounts.length > 0) {
@@ -155,6 +156,7 @@ class BetTab extends React.Component {
                     <p id="guess_label">Your Guess:</p>
 
                     <Input
+                        type="number"
                         placeholder='your guess'
                         id="guess_input"
                         value={this.state.user_guess}

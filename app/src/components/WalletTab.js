@@ -9,7 +9,7 @@ import AccountList from './AccountList';
 import { Row, Col, Container } from 'react-bootstrap';
 
 class WalletTab extends React.Component {
-
+    
     render() {
         return (
             <div id="wallet_tab">

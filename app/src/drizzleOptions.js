@@ -7,8 +7,8 @@ const options = {
         fallback: {
             type: "ws",
             // url: "ws://127.0.0.1:7545", // Ganache App
-            url: "ws://127.0.0.1:8545", // Metamask & Ganache-cli
-            // url: "ws://127.0.0.1:9545", // Truffle Develop
+            // url: "ws://127.0.0.1:8545", // Metamask & Ganache-cli
+            url: "ws://127.0.0.1:9545", // Truffle Develop
         },
     }
 };

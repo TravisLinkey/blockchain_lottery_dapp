@@ -12,6 +12,18 @@ import TabMenu from './TabMenu';
 import { DrizzleContext } from 'drizzle-react';
 
 class App extends React.Component {
+    state = {
+        child_contract: null
+    }
+
+    subscribe_to_events = async (drizzleContext) => {
+        const { drizzle } = drizzleContext;
+        let contract = drizzle.contracts.LotteryFactory
+
+        this.unsubscribe = contract.events.GuessMade(() => {
+            // window.location.reload(false); 
+        })
+    }
 
     render() {
         return (
@@ -21,7 +33,8 @@ class App extends React.Component {
 
                     if (!initialized) { return ("Loading. . . ") }
                     else {
-                        console.log(Object.values(drizzleState.accountBalances));
+                        this.subscribe_to_events(drizzleContext)
+                        
                         return (<TabMenu drizzle={drizzle} drizzleState={drizzleState} />)
                     }
                 }}

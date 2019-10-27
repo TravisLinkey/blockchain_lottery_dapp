@@ -5,10 +5,6 @@ import '../css/AccountList.css'
 // components used
 import AccountSegment from './AccountSegment';
 
-// drizzle imports
-// import { drizzleConnect } from 'drizzle-react';
-// const mapStateToProps = (state) => ({state});
-
 class AccountList extends React.Component {
     state = {
         account_balance: {}
@@ -18,17 +14,12 @@ class AccountList extends React.Component {
     componentDidMount() {
         this.set_accounts(this.props.drizzleState.accountBalances)
     }
-    componentDidUpdate(prevProps) {
-        if(prevProps.drizzleState.accountBalances !== this.props.drizzleState.accountBalances) {
-            console.log('Resetting Wallet Accounts')
-            this.set_accounts(this.props.drizzleState.accountBalances)
-        }
-    }
 
     // component functions
     calculate_balance(old_balance) {
         return (parseFloat(old_balance)/10**18);
     }
+
     set_accounts = (accountBalances) => {
         const account = Object.keys(accountBalances)
         const balance = Object.values(accountBalances)
@@ -72,4 +63,3 @@ class AccountList extends React.Component {
 };
 
 export default AccountList;
-// export default drizzleConnect(AccountList, mapStateToProps);

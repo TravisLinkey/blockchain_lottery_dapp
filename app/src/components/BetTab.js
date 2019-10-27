@@ -8,6 +8,7 @@ import { Row } from 'react-bootstrap';
 
 // compnent imports
 import { Loader } from 'semantic-ui-react'
+import ModalBasicExample from '../components/ModalBasicExample';
 
 class BetTab extends React.Component {
     state = {
@@ -20,63 +21,30 @@ class BetTab extends React.Component {
         user_guess: '',
         loading: false,
         guess_made: false,
-        latest_contract: null
+        contract: null,
+        popup_is_open: false
     }
 
     // lifecycle methods
     componentDidMount() {
-        console.log(this.props);
         this.update_lottery_contract();
     }
 
     // contract functions
     update_lottery_contract = async () => {
-        let abi = this.props.drizzle.contracts.LotteryContract.abi;
-        let latest_child = await this.props.drizzle.contracts.LotteryFactory.methods.get_latest_child().call();
-        let latest_contract = new this.props.drizzle.web3.eth.Contract(abi, latest_child);
-
-        let num_guesses = await latest_contract.methods.get_num_guesses().call();
-        let balance = await latest_contract.methods.get_balance_in_contract().call();
+        let contract = this.props.drizzle.contracts.LotteryFactory;
+        let num_guesses = await contract.methods.get_total_guesses().call();
+        let balance = await contract.methods.get_balance().call();
+        let magic_number = await contract.methods.get_magic_number().call();
+        console.log('Magic Number: ', magic_number)
 
         this.setState({
-            latest_contract: latest_contract,
-            latest_child_address: latest_child,
+            contract: contract,
             total_guesses: num_guesses,
             total_contract_balance: balance
         }, () => {
             this.get_dropdown_accounts();
         })
-    }
-
-    // TODO
-    get_num_guesses = async () => {
-        if (this.state.latest_contract != null) {
-
-            let num_guesses = await this.state.latest_contract.methods.get_num_guesses().call();
-            console.log('Updated num of guesses: ', num_guesses);
-
-            this.setState({
-                total_guesses: num_guesses
-            })
-        }
-        else {
-            this.update_lottery_contract();
-        }
-    }
-    // TODO
-    get_contract_balance = async () => {
-        if (this.state.latest_contract != null) {
-
-            let balance = await this.state.latest_contract.methods.get_balance_in_contract().call();
-            console.log("Contract Balance: ", balance);
-
-            this.setState({
-                total_contract_balance: balance
-            })
-        }
-        else {
-            this.update_lottery_contract();
-        }
     }
     get_dropdown_accounts = () => {
         var dropdown_selection = [];
@@ -96,7 +64,6 @@ class BetTab extends React.Component {
 
     // component functions
     update_input_value = (event, value) => {
-
         let guess_made = value == null ? false : true
 
         this.setState({
@@ -117,8 +84,6 @@ class BetTab extends React.Component {
         })
     }
     make_guess = async () => {
-        console.log('Submitting Guess')
-
         this.setState({
             loading: true
         })
@@ -130,7 +95,8 @@ class BetTab extends React.Component {
         }
 
         let value = (250000000000000000);
-        await this.state.latest_contract.methods.make_guess(guess).send({ from: this.state.selected_account, value: (value) })
+        await this.state.contract.methods.make_guess(guess).send(
+            { from: this.state.selected_account, value: (value), gas:3000000 })
 
         this.setState({
             loading: false
@@ -181,11 +147,8 @@ class BetTab extends React.Component {
                     </Row>
                 </div>
 
-                <Row>
-                    {
-                        dropdown
-                    }
-                </Row>
+                <Row> { dropdown } </Row>
+                <Row><ModalBasicExample drizzle={this.props.drizzle} value={this.state.total_contract_balance}/></Row>
 
                 <div id="guess_segment">
 

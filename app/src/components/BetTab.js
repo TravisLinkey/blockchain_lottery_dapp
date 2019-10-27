@@ -22,7 +22,6 @@ class BetTab extends React.Component {
         loading: false,
         guess_made: false,
         contract: null,
-        popup_is_open: false
     }
 
     // lifecycle methods

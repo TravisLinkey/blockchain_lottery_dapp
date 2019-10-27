@@ -11,33 +11,34 @@ export default class TransitionablePortalExamplePortal extends Component {
   handleOpen = () => this.setState({ open: true })
   handleClose = () => this.setState({ open: false })
 
+  // lifecycle methods
   componentDidMount() {
     this.subscribe_to_events()
-    this.setState({
-      value: this.props.value
-    })
   }
 
-  componentWillReceiveProps() {
-    this.setState({
-      value: this.props.value
-    })
-  }
-
+  // component functions
   subscribe_to_events = async () => {
     let contract = this.props.drizzle.contracts.LotteryFactory
 
-    this.unsubscribe = contract.events.LotteryWon(() => {
-      console.log('Someone Won the Lottery!!!')
-      console.log('Is this a value? ', this.state.value)
+    this.unsubscribe_guess = contract.events.GuessMade(async () => {
+      let num_guesses = await this.props.drizzle.contracts.LotteryFactory.methods.get_total_guesses().call()
+      let contract_balance = await this.props.drizzle.contracts.LotteryFactory.methods.get_balance().call()
 
+      if (num_guesses > 0) {
+        this.setState({
+          value: contract_balance
+        })
+      }
+    })
+
+    this.unsubscribe = contract.events.LotteryWon(() => {
       this.setState({ popup_is_open: true })
       setTimeout(() => {
         this.setState({ popup_is_open: false })
       }, 3000)
 
       setTimeout(() => {
-        window.location.reload(false); 
+        window.location.reload(false);
       }, 3100)
     })
   }
@@ -53,6 +54,7 @@ export default class TransitionablePortalExamplePortal extends Component {
           closeOnTriggerClick
           openOnTriggerClick
           open={this.state.popup_is_open}
+        // open={true}
         >
           <Segment
             style={{
@@ -68,11 +70,11 @@ export default class TransitionablePortalExamplePortal extends Component {
             }}
           >
             <div id="modal_segment">
-              <Header><h1>Congratulations</h1></Header>
+              <Header className="wrapper"><h1>Congratulations</h1></Header>
               <i className="ethereum icon" id="ethereum" />
               <h4>You have guessed the Magic Number!</h4>
               <h4>You will now receive the entire balance:</h4>
-              <h2>{this.state.value/1000000000000000000} ETH</h2>
+              <h2>{this.state.value / 1000000000000000000} ETH</h2>
             </div>
           </Segment>
         </TransitionablePortal>

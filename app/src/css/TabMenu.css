@@ -5,9 +5,9 @@
 }
 
 #menu_item.active {
-    border-color: #9198e5;
+    border-color: #59ffbf;
 }
 
 #menu_item.active i {
-    color: #9198e5;
+    color: #59ffbf;
 }

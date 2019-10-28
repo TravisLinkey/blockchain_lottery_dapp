@@ -14,7 +14,7 @@ class BetTab extends React.Component {
     state = {
         accounts: [],
         selected_account: null,
-        total_contract_balance: 0,
+        balance: 0,
         total_guesses: 0,
         drizzle: this.props.drizzle,
         drizzleState: this.props.drizzleState,
@@ -40,7 +40,7 @@ class BetTab extends React.Component {
         this.setState({
             contract: contract,
             total_guesses: num_guesses,
-            total_contract_balance: balance
+            balance: balance
         }, () => {
             this.get_dropdown_accounts();
         })
@@ -131,7 +131,7 @@ class BetTab extends React.Component {
                         <h2>Total ETH in Contract: </h2>
                         <div id="contract_balance">
                             {
-                                this.state.total_contract_balance / 1000000000000000000
+                                this.state.balance / 1000000000000000000
                             }
                         </div>
 
@@ -148,7 +148,13 @@ class BetTab extends React.Component {
                 </div>
 
                 <Row> { dropdown } </Row>
-                <Row><ModalBasicExample drizzle={this.props.drizzle} value={this.state.total_contract_balance}/></Row>
+                <Row>
+                    <ModalBasicExample
+                        drizzle={this.props.drizzle}
+                        guesses={this.state.total_guesses}
+                        balance={this.state.balance}
+                    />
+                </Row>
 
                 <div id="guess_segment">
 

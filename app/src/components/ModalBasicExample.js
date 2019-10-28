@@ -7,7 +7,7 @@ import {
 import '../css/ModalBasicExample.css'
 
 export default class TransitionablePortalExamplePortal extends Component {
-  state = { open: false, value: 0 }
+  state = { open: false, balance: 0 }
   handleOpen = () => this.setState({ open: true })
   handleClose = () => this.setState({ open: false })
 
@@ -16,22 +16,27 @@ export default class TransitionablePortalExamplePortal extends Component {
     this.subscribe_to_events()
   }
 
+  componentWillUnmount() {
+    this.unsubscribe_guess.unsubscribe()
+    this.unsubscribe_win.unsubscribe()
+  }
+
   // component functions
   subscribe_to_events = async () => {
     let contract = this.props.drizzle.contracts.LotteryFactory
 
     this.unsubscribe_guess = contract.events.GuessMade(async () => {
       let num_guesses = await this.props.drizzle.contracts.LotteryFactory.methods.get_total_guesses().call()
-      let contract_balance = await this.props.drizzle.contracts.LotteryFactory.methods.get_balance().call()
+      let balance = await this.props.drizzle.contracts.LotteryFactory.methods.get_balance().call()
 
       if (num_guesses > 0) {
         this.setState({
-          value: contract_balance
+          balance: balance
         })
       }
     })
 
-    this.unsubscribe = contract.events.LotteryWon(() => {
+    this.unsubscribe_win = contract.events.LotteryWon(() => {
       this.setState({ popup_is_open: true })
       setTimeout(() => {
         this.setState({ popup_is_open: false })
@@ -74,7 +79,7 @@ export default class TransitionablePortalExamplePortal extends Component {
               <i className="ethereum icon" id="ethereum" />
               <h4>You have guessed the Magic Number!</h4>
               <h4>You will now receive the entire balance:</h4>
-              <h2>{this.state.value / 1000000000000000000} ETH</h2>
+              <h2>{this.state.balance / 1000000000000000000} ETH</h2>
             </div>
           </Segment>
         </TransitionablePortal>

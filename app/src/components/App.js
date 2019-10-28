@@ -16,15 +16,6 @@ class App extends React.Component {
         child_contract: null
     }
 
-    subscribe_to_events = async (drizzleContext) => {
-        const { drizzle } = drizzleContext;
-        let contract = drizzle.contracts.LotteryFactory
-
-        this.unsubscribe = contract.events.GuessMade(() => {
-            // window.location.reload(false); 
-        })
-    }
-
     render() {
         return (
             <DrizzleContext.Consumer>
@@ -32,9 +23,7 @@ class App extends React.Component {
                     const { drizzle, drizzleState, initialized } = drizzleContext;
 
                     if (!initialized) { return ("Loading. . . ") }
-                    else {
-                        this.subscribe_to_events(drizzleContext)
-                        
+                    else {                        
                         return (<TabMenu drizzle={drizzle} drizzleState={drizzleState} />)
                     }
                 }}

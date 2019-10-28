@@ -42,14 +42,11 @@ class TabMenu extends React.Component {
     else if (this.state.active_item === 'bet') {
       segment = <BetTab
                   drizzle={this.props.drizzle}
-                  drizzleState={this.props.drizzleState} 
+                  drizzleState={this.props.drizzleState}
                   />
     }
     return (
       <div id="tab-menu">
-
-        {/* <Menu inverted pointing secondary> */}
-        {/* <Menu pointing secondary color="purple"> */}
         <Menu pointing inverted secondary>
           <Menu.Item name='home' icon='home' id="menu_item" active={active_item === 'home'} onClick={this.handleItemClick} />
           <Menu.Item name='wallet' icon='ethereum' id="menu_item" active={active_item === 'wallet'} onClick={this.handleItemClick} />

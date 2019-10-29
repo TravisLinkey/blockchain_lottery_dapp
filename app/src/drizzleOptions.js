@@ -1,8 +1,7 @@
 import LotteryFactory from './contracts/LotteryFactory.json';
-import LotteryContract from './contracts/LotteryContract.json';
 
 const options = {
-    contracts: [LotteryFactory, LotteryContract],
+    contracts: [LotteryFactory],
     web3: {
         fallback: {
             type: "ws",
